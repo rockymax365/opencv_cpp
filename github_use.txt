@@ -1,0 +1,71 @@
+然后我们在磁盘中建立一个本地仓库,然后点击右键会出现GIT Bash Here 选项,点击此选项进行操作面板
+
+我们首先配置当前的用户,使用以下的命令:
+
+git config --global user.name  用户命
+
+git config --global user.password  密码
+
+git config --list 查看当前的配置信息
+
+-------------------------------------------------------------------
+
+以下是自己总结的一些简单的操作
+
+git init (初始化仓库)
+
+git show   提交版本号         (展示残仓库的状态)
+
+git add (增加到暂存区)
+
+git commit -m "信息" (提交到仓库)
+
+git status (查看仓库状态)
+
+git pull (将远程仓库的提交拉到本地)
+
+git push (将本地的提交推送到远程仓库)
+
+git remote add "别名" 仓库地址 (连接远程仓库的地址) 
+
+git remote -v (查看当前所连接的仓库的地址)
+
+git add . (将所有文件提交到暂存区)
+
+git commit . -m "此次修改的信息" (将所有文件提交到本地仓库)
+
+git clone 仓库地址
+
+git push    "仓库地址别名" master (推送到远程仓库)
+
+
+
+
+把一个文件提交到本地仓库.(git add .   git commit . -m "此处修改的信息")
+
+下面我们来把自己的本地仓库的文件推送到github上面
+
+首先我们在github上面建立一个自己的仓库.仓库的名称做好跟本地仓库的名称以一样.
+
+接下来我们只需要获取仓库地址就好,给地址起别名 origin
+git remote add origin https://github.com/rockymax365/opencv_cpp.git
+
+
+上传github之前pull一下，取回 origin/master 分支，再与本地的 master 分支合并。
+git pull origin master
+
+上传代码到GitHub远程仓库
+git push -u origin master
+
+中间可能会让你输入Username和Password，你只要输入github的账号和密码就行了。执行完后，如果没有异常，等待执行完就上传成功了。
+
+
+
+
+
+
+
+
+
+
+
