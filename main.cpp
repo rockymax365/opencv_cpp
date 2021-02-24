@@ -8,31 +8,31 @@
 using namespace std;
 using namespace cv;
 
-//¹Ç¼ÜÌáÈ¡
+//éª¨æ¶æå–
 void skeletonExtraction(Mat & img)
 {
 	threshold(img, img, 127, 255, THRESH_BINARY);
 
-	//ÁÙÊ±Í¼Ïñ
+	//ä¸´æ—¶å›¾åƒ
 	Mat skel(img.size(), CV_8UC1, Scalar(0));
 	Mat temp(img.size(), CV_8UC1);
 	Mat element = getStructuringElement(MORPH_CROSS, Size(3, 3), Point(-1, -1));
 	bool done = false;
 
 	do {
-		//¿ª²Ù×÷-È·±£È¥µôĞ¡µÄ¸ÉÈÅ¿é
+		//å¼€æ“ä½œ-ç¡®ä¿å»æ‰å°çš„å¹²æ‰°å—
 		morphologyEx(img, temp, MORPH_OPEN, element);
-		//È¡·´²Ù×÷
+		//å–åæ“ä½œ
 		bitwise_not(temp, temp);
-		//µÃµ½ÓëÔ´Í¼Ïñ²»Í¬
+		//å¾—åˆ°ä¸æºå›¾åƒä¸åŒ
 		bitwise_and(img, temp, temp);
-		//Ê¹ÓÃËüÌáÈ¡¹Ç¼Ü£¬µÃµ½ÊÇ½ö½ö±ÈÔ´Í¼ÏñĞ¡Ò»¸öÏñËØ
+		//ä½¿ç”¨å®ƒæå–éª¨æ¶ï¼Œå¾—åˆ°æ˜¯ä»…ä»…æ¯”æºå›¾åƒå°ä¸€ä¸ªåƒç´ 
 		bitwise_or(skel, temp, skel);
-		//Ã¿´ÎÑ­»·¸¯Ê´£¬Í¨¹ı²»¶Ï¸¯Ê´µÄ·½Ê½µÃµ½¹Ç¼Ü
+		//æ¯æ¬¡å¾ªç¯è…èš€ï¼Œé€šè¿‡ä¸æ–­è…èš€çš„æ–¹å¼å¾—åˆ°éª¨æ¶
 		erode(img, img, element);
 
-		//¶Ô¸¯Ê´Ö®ºóµÄÍ¼ÏñÑ°ÕÒ×î´óÖµ£¬Èç¹û±»ÍêÈ«¸¯Ê´ÔòËµÃ÷
-		//Ö»Ê£ÏÂ±³¾°ºÚÉ«¡¢ÒÑ¾­µÃµ½¹Ç¼Ü£¬ÍË³öÑ­»·
+		//å¯¹è…èš€ä¹‹åçš„å›¾åƒå¯»æ‰¾æœ€å¤§å€¼ï¼Œå¦‚æœè¢«å®Œå…¨è…èš€åˆ™è¯´æ˜
+		//åªå‰©ä¸‹èƒŒæ™¯é»‘è‰²ã€å·²ç»å¾—åˆ°éª¨æ¶ï¼Œé€€å‡ºå¾ªç¯
 		double max;
 		minMaxLoc(img, NULL, &max);
 		done = (0 == max);
@@ -57,9 +57,9 @@ int main()
 
 	skeletonExtraction(img);
 
-	//´ò¿ªÒ»¸öÄ¬ÈÏµÄÏà»ú
+	//æ‰“å¼€ä¸€ä¸ªé»˜è®¤çš„ç›¸æœº
 	VideoCapture capture(0);
-	//¼ì²éÊÇ·ñ³É¹¦´ò¿ª
+	//æ£€æŸ¥æ˜¯å¦æˆåŠŸæ‰“å¼€
 	if (!capture.isOpened())
 		return -1;
 
@@ -67,8 +67,8 @@ int main()
 	while (1)
 	{
 		Mat frame;
-		capture >> frame;//´ÓÏà»ú¶ÁÈ¡ĞÂÒ»Ö¡
-		//cvtColor(frame, edges, COLOR_BGR2GRAY);//±äÎª»Ò¶ÈÍ¼
+		capture >> frame;//ä»ç›¸æœºè¯»å–æ–°ä¸€å¸§
+		//cvtColor(frame, edges, COLOR_BGR2GRAY);//å˜ä¸ºç°åº¦å›¾
 		resize(frame, frame, Size(frame.cols, frame.rows));
 		imshow("image", frame);
 		if (waitKey(10) == 'q')
@@ -80,10 +80,10 @@ int main()
 #endif
 
 
-//¶ÁÈ¡ÏÔÊ¾Í¼Ïñ
+//è¯»å–æ˜¾ç¤ºå›¾åƒ
 void showImg(string imgPath)
 {
-	cv::Mat src = imread(imgPath); //B,G,R  ºó¼ÓIMREAD_GRAYSCALEÎªÏÔÊ¾»Ò¶ÈÍ¼Ïñ
+	cv::Mat src = imread(imgPath); //B,G,R  ååŠ IMREAD_GRAYSCALEä¸ºæ˜¾ç¤ºç°åº¦å›¾åƒ
 
 	if (src.empty())
 	{
@@ -91,14 +91,14 @@ void showImg(string imgPath)
 		return;
 	}
 
-	cv::namedWindow("input", cv::WINDOW_FREERATIO); //WINDOW_FREERATIO±íÊ¾´óĞ¡¿Éµ÷£¬cv::WINDOW_AUTOSIZEÎªÄ¬ÈÏ£¬Ô­Í¼´óĞ¡±£³ÖÒ»ÖÂ
+	cv::namedWindow("input", cv::WINDOW_FREERATIO); //WINDOW_FREERATIOè¡¨ç¤ºå¤§å°å¯è°ƒï¼Œcv::WINDOW_AUTOSIZEä¸ºé»˜è®¤ï¼ŒåŸå›¾å¤§å°ä¿æŒä¸€è‡´
 	cv::imshow("input",src);
-	cv::waitKey(0);  //0±íÊ¾Ò»Ö±Í£Ö¹£¬µÈ´ı°´¼ü£¬Êı×ÖÎªµÈ´ıºÁÃëÊı
+	cv::waitKey(0);  //0è¡¨ç¤ºä¸€ç›´åœæ­¢ï¼Œç­‰å¾…æŒ‰é”®ï¼Œæ•°å­—ä¸ºç­‰å¾…æ¯«ç§’æ•°
 	cv::destroyAllWindows();
 	return;
 }
 
-//ÑÕÉ«¿Õ¼ä×ª»»
+//é¢œè‰²ç©ºé—´è½¬æ¢
 void colorSpaceDemo(cv::Mat &img)
 {
 	cv::Mat gray, hsv;
@@ -114,14 +114,14 @@ void colorSpaceDemo(cv::Mat &img)
 	return;
 }
 
-//´´½¨Mat¶ÔÏó
+//åˆ›å»ºMatå¯¹è±¡
 void matCreation(cv::Mat &img)
 {
 	cv::Mat m1, m2;
 	m1 = img.clone();
 	img.copyTo(img);
 
-	//´´½¨¿Õ°×Í¼Ïñ
+	//åˆ›å»ºç©ºç™½å›¾åƒ
 	cv::Mat m3 = cv::Mat::zeros(cv::Size(8, 8), CV_8UC3);
 	m3 = cv::Scalar(100,100,100);
 	cout << "Width: " << m3.cols << endl;
@@ -131,7 +131,7 @@ void matCreation(cv::Mat &img)
 	return;
 }
 
-//µ¥¸öÏñËØ·ÃÎÊ
+//å•ä¸ªåƒç´ è®¿é—®
 void pixelVisitDemo(cv::Mat &img)
 {
 	int w = img.cols;
@@ -140,12 +140,12 @@ void pixelVisitDemo(cv::Mat &img)
 	for(int row=0; row<h; row++)
 		for (int col = 0; col < w; col++)
 		{
-			if (dims == 1)//»Ò¶È
+			if (dims == 1)//ç°åº¦
 			{
-				int pv = img.at<uchar>(row, col);   //at·ÃÎÊ
+				int pv = img.at<uchar>(row, col);   //atè®¿é—®
 				img.at<uchar>(row, col) = 255 - pv;
 			}
-			else if (dims == 3)//²ÊÉ«
+			else if (dims == 3)//å½©è‰²
 			{
 				cv::Vec3b bgr = img.at<cv::Vec3b>(row, col);
 				img.at<cv::Vec3b>(row, col)[0] = 255 - bgr[0];
@@ -154,7 +154,7 @@ void pixelVisitDemo(cv::Mat &img)
 			}
 		}
 
-	//Ö¸Õë·½Ê½·ÃÎÊ
+	//æŒ‡é’ˆæ–¹å¼è®¿é—®
 	for (int row = 0; row < h; row++)
 	{
 		uchar* currentRow = img.ptr<uchar>(row);
@@ -180,24 +180,24 @@ void pixelVisitDemo(cv::Mat &img)
 }
 
 
-//Í¼ÏñÏñËØ²Ù×÷£¨¼Ó¼õ³Ë³ı£©
+//å›¾åƒåƒç´ æ“ä½œï¼ˆåŠ å‡ä¹˜é™¤ï¼‰
 void operatorDemo(cv::Mat &img)
 {
 	cv::Mat dst;
-	dst = img + cv::Scalar(10, 10, 10); //add  ³Ë·¨²»Ö§³Ö
+	dst = img + cv::Scalar(10, 10, 10); //add  ä¹˜æ³•ä¸æ”¯æŒ
 
 	cv::Mat m = cv::Mat::zeros(img.size(),img.type());
 	m = cv::Scalar(2, 2, 2);
-	cv::multiply(img, m, dst);  //×¨ÓÃ³Ë·¨  add subtract divide
+	cv::multiply(img, m, dst);  //ä¸“ç”¨ä¹˜æ³•  add subtract divide
 
-	//cv::saturate_cast<uchar>()  °ÑÊıÖµ·¶Î§ÏŞ¶¨ÔÚ0-255Ö®¼ä
+	//cv::saturate_cast<uchar>()  æŠŠæ•°å€¼èŒƒå›´é™å®šåœ¨0-255ä¹‹é—´
 
 
 	cv::imshow("add", dst);
 	cv::waitKey(0);
 }
 
-// trackbar ¹ö¶¯Ìõ²Ù×÷
+// trackbar æ»šåŠ¨æ¡æ“ä½œ
 #if 1
 
 static void on_track(int b, void* userdata)
@@ -222,11 +222,11 @@ void tracking_bar_demo(cv::Mat &image)
 #endif
 
 
-/*waitkey½âÎö
-1.waitKey()ÓëwaitKey(0)£¬¶¼´ú±íÎŞÏŞµÈ´ı£¬waitKeyº¯ÊıµÄÄ¬ÈÏ²ÎÊı¾ÍÊÇint delay = 0£¬¹ÊÕâÁ©ĞÎÊ½±¾ÖÊÊÇÒ»ÑùµÄ¡£
-2.waitKey(n)£¬µÈ´ınºÁÃëºó£¬¹Ø±ÕÏÔÊ¾µÄ´°¿Ú¡£
-3.µ±µÈ´ıÊ±¼äÄÚÎŞÈÎºÎ²Ù×÷Ê±µÈ´ı½áÊøºó·µ»Ø-1¡£
-4.µ±µÈ´ıÊ±¼äÄÚÓĞÊäÈë×Ö·ûÊ±£¬Ôò·µ»ØÊäÈë×Ö·ûµÄASCIIÂë¶ÔÓ¦µÄÊ®½øÖÆÖµ¡£
+/*waitkeyè§£æ
+1.waitKey()ä¸waitKey(0)ï¼Œéƒ½ä»£è¡¨æ— é™ç­‰å¾…ï¼ŒwaitKeyå‡½æ•°çš„é»˜è®¤å‚æ•°å°±æ˜¯int delay = 0ï¼Œæ•…è¿™ä¿©å½¢å¼æœ¬è´¨æ˜¯ä¸€æ ·çš„ã€‚
+2.waitKey(n)ï¼Œç­‰å¾…næ¯«ç§’åï¼Œå…³é—­æ˜¾ç¤ºçš„çª—å£ã€‚
+3.å½“ç­‰å¾…æ—¶é—´å†…æ— ä»»ä½•æ“ä½œæ—¶ç­‰å¾…ç»“æŸåè¿”å›-1ã€‚
+4.å½“ç­‰å¾…æ—¶é—´å†…æœ‰è¾“å…¥å­—ç¬¦æ—¶ï¼Œåˆ™è¿”å›è¾“å…¥å­—ç¬¦çš„ASCIIç å¯¹åº”çš„åè¿›åˆ¶å€¼ã€‚
 */
 void key_demo(cv::Mat &image)
 {
@@ -250,7 +250,7 @@ void key_demo(cv::Mat &image)
 	}
 }
 
-//Í¼ÏñÏñËØÎ»²Ù×÷
+//å›¾åƒåƒç´ ä½æ“ä½œ
 void bitwise_demo(cv::Mat &image)
 {
 	cv::Mat m1 = cv::Mat::zeros(cv::Size(256, 256), CV_8UC3);
@@ -268,7 +268,7 @@ void bitwise_demo(cv::Mat &image)
 	cv::imshow("bit operate", dst);
 }
 
-//Í¨µÀ²Ù×÷
+//é€šé“æ“ä½œ
 void channels_demo(cv::Mat &image)
 {
 	std::vector<cv::Mat> mv;
@@ -289,30 +289,30 @@ void channels_demo(cv::Mat &image)
 }
 
 
-//É«²Ê¿Õ¼ä×ª»»
+//è‰²å½©ç©ºé—´è½¬æ¢
 // H: 0-180  S: 0-255 V: 0-255
 void inrange_demo(cv::Mat &image)
 {
 	cv::Mat hsv;
 	cv::cvtColor(image, hsv, COLOR_BGR2HSV);
 	cv::Mat mask;
-	cv::inRange(hsv, cv::Scalar(35, 43, 46), cv::Scalar(77, 255, 255), mask);  //ÂÌÉ«,¿É²éhsv±í»ñÈ¡ÑÕÉ«·¶Î§
+	cv::inRange(hsv, cv::Scalar(35, 43, 46), cv::Scalar(77, 255, 255), mask);  //ç»¿è‰²,å¯æŸ¥hsvè¡¨è·å–é¢œè‰²èŒƒå›´
 
 	cv::Mat redback = cv::Mat(image.size(), image.type());
 	redback = cv::Scalar(40, 40, 200);
 	bitwise_not(mask, mask);
 	cv::imshow("mask", mask);
-	image.copyTo(redback, mask);   //Ö»¶ÔredbackµÄmask£¨°×É«ÏñËØµã£©ÇøÓòÓĞ×÷ÓÃ
+	image.copyTo(redback, mask);   //åªå¯¹redbackçš„maskï¼ˆç™½è‰²åƒç´ ç‚¹ï¼‰åŒºåŸŸæœ‰ä½œç”¨
 }
 
 
-//ÏñËØÍ³¼Æ
+//åƒç´ ç»Ÿè®¡
 void pixel_statistic_demo(cv::Mat &image)
 {
 	double minv, maxv;
 	cv::Point minLoc, maxLoc;
 	std::vector<cv::Mat> mv;
-	cv::split(image, mv); //minMaxLoc±ØĞëÓÃÔÚµ¥Í¨µÀÉÏ
+	cv::split(image, mv); //minMaxLocå¿…é¡»ç”¨åœ¨å•é€šé“ä¸Š
 	cv::minMaxLoc(mv[0], &minv, &maxv, &minLoc, &maxLoc, cv::Mat());
 
 	std::cout << "min value: " << minv << " max value: " << maxv << std::endl;
@@ -323,7 +323,7 @@ void pixel_statistic_demo(cv::Mat &image)
 	std::cout << "mean: " << mean << " stddev: " << stddev << std::endl;
 }
 
-//Í¼ĞÎ»æÖÆ
+//å›¾å½¢ç»˜åˆ¶
 void draw_demo(cv::Mat &image)
 {
 	cv::Rect rect;
@@ -362,13 +362,13 @@ void polyline_drawing_demo()
 	cv::polylines(canvas, pts, true, cv::Scalar(0, 0, 255), 2, LINE_AA, 0);
 	std::vector<std::vector<cv::Point>> contours;
 	contours.push_back(pts);
-	cv::drawContours(canvas, contours,-1,cv::Scalar(255,0,255),-1);  //Ìî³ä
+	cv::drawContours(canvas, contours,-1,cv::Scalar(255,0,255),-1);  //å¡«å……
 
 	cv::imshow("poly drawing", canvas);
 
 }
 
-#if 1  //Êó±êÊÂ¼ş
+#if 1  //é¼ æ ‡äº‹ä»¶
 cv::Point sp(-1, -1);
 cv::Point ep(-1, -1);
 
@@ -431,7 +431,7 @@ void mouse_drawing_demo(cv::Mat &image)
 
 #endif
 
-//¹éÒ»»¯
+//å½’ä¸€åŒ–
 void norm_demo(cv::Mat &image)
 {
 	cv::Mat dst;
@@ -443,7 +443,7 @@ void norm_demo(cv::Mat &image)
 	cv::imshow("normalize", dst);
 }
 
-//Í¼ÏñËõ·Å
+//å›¾åƒç¼©æ”¾
 void resize_demo(cv::Mat &image)
 {
 	cv::Mat zoomIn, zoomOut;
@@ -453,42 +453,42 @@ void resize_demo(cv::Mat &image)
 	cv::imshow("zoomOut", zoomOut);
 }
 
-//Í¼Ïñ·­×ª
+//å›¾åƒç¿»è½¬
 void flip_demo(cv::Mat &image)
 {
 	cv::Mat dst;
-	cv::flip(image, dst, 0); //ÉÏÏÂ·­×ª
-	//cv::flip(image, dst, 1); //×óÓÒ·­×ª
-	//cv::flip(image, dst, -1); //180¶ÈĞı×ª
+	cv::flip(image, dst, 0); //ä¸Šä¸‹ç¿»è½¬
+	//cv::flip(image, dst, 1); //å·¦å³ç¿»è½¬
+	//cv::flip(image, dst, -1); //180åº¦æ—‹è½¬
 	cv::imshow("image flip", dst);
 }
 
-//Í¼ÏñĞı×ª
+//å›¾åƒæ—‹è½¬
 void rotate_demo(cv::Mat &image)
 {
 	cv::Mat dst, M;
 	int w = image.cols;
 	int h = image.rows;
-	M = cv::getRotationMatrix2D(cv::Point2f(w / 2, h / 2), 45, 1.0);  //Ğı×ªÖĞĞÄ £¬ ½Ç¶È£¬ ·ÅËõ±ÈÀı
+	M = cv::getRotationMatrix2D(cv::Point2f(w / 2, h / 2), 45, 1.0);  //æ—‹è½¬ä¸­å¿ƒ ï¼Œ è§’åº¦ï¼Œ æ”¾ç¼©æ¯”ä¾‹
 	double cos = abs(M.at<double>(0, 0));
 	double sin = abs(M.at<double>(0, 1));
 	int nw = cos * w + sin * h;
 	int nh = sin * w + cos * h;
 	M.at<double>(0, 2) += (nw / 2 - w / 2);
-	M.at<double>(1, 2) += (nh / 2 - h / 2);  //Ô­Í¼ÎŞËğÊ§Ğı×ª
+	M.at<double>(1, 2) += (nh / 2 - h / 2);  //åŸå›¾æ— æŸå¤±æ—‹è½¬
 	//warpAffine(image, dst, M, image.size());
 	warpAffine(image, dst, M, cv::Size(nw, nh), INTER_LINEAR, 0, cv::Scalar(255, 255, 0));
 	cv::imshow("rotate", dst);
 }
 
-//ÉãÏñÍ·
+//æ‘„åƒå¤´
 void video_demo()
 {
-	//cv::VideoCapture capture(0); //ÉãÏñÍ·
-	cv::VideoCapture capture("E:/movie/dji/DJI_0287.MP4"); //ÎÄ¼ş
-	int frame_width = capture.get(CAP_PROP_FRAME_WIDTH); //ÊÓÆµ¿í¶È
-	int frame_height = capture.get(CAP_PROP_FRAME_HEIGHT); //ÊÓÆµ¸ß¶È
-	int count = capture.get(CAP_PROP_FRAME_COUNT); //×ÜÖ¡Êı
+	//cv::VideoCapture capture(0); //æ‘„åƒå¤´
+	cv::VideoCapture capture("E:/movie/dji/DJI_0287.MP4"); //æ–‡ä»¶
+	int frame_width = capture.get(CAP_PROP_FRAME_WIDTH); //è§†é¢‘å®½åº¦
+	int frame_height = capture.get(CAP_PROP_FRAME_HEIGHT); //è§†é¢‘é«˜åº¦
+	int count = capture.get(CAP_PROP_FRAME_COUNT); //æ€»å¸§æ•°
 	int fps = capture.get(CAP_PROP_FPS);
 
 	cv::VideoWriter writer("./test.mp4", capture.get(CAP_PROP_FOURCC), fps, cv::Size(frame_width, frame_height), true);
@@ -496,13 +496,13 @@ void video_demo()
 	cv::Mat frame;
 	while (true)
 	{
-		capture.read(frame);  //Ö®ºó¿É¶ÔÊÓÆµ½øĞĞÒ»Ğ©´¦Àí
+		capture.read(frame);  //ä¹‹åå¯å¯¹è§†é¢‘è¿›è¡Œä¸€äº›å¤„ç†
 		cv::flip(frame, frame, 1);
 		if (frame.empty())
 		{
 			break;
 		}
-		cv::namedWindow("frame", cv::WINDOW_FREERATIO); //WINDOW_FREERATIO±íÊ¾´óĞ¡¿Éµ÷£¬cv::WINDOW_AUTOSIZEÎªÄ¬ÈÏ£¬Ô­Í¼´óĞ¡±£³ÖÒ»ÖÂ
+		cv::namedWindow("frame", cv::WINDOW_FREERATIO); //WINDOW_FREERATIOè¡¨ç¤ºå¤§å°å¯è°ƒï¼Œcv::WINDOW_AUTOSIZEä¸ºé»˜è®¤ï¼ŒåŸå›¾å¤§å°ä¿æŒä¸€è‡´
 		cv::imshow("frame", frame);
 
 		writer.write(frame);
@@ -537,7 +537,7 @@ void gaussian_blur_demo(cv::Mat &image)
 	cv::imshow("gaussian", dst);
 }
 
-//Ë«±ß¸ßË¹Ä£ºı,ÃÀÑÕĞ§¹û
+//åŒè¾¹é«˜æ–¯æ¨¡ç³Š,ç¾é¢œæ•ˆæœ
 void bifilter_demo(cv::Mat &image)
 {
 	cv::Mat dst;
@@ -545,7 +545,7 @@ void bifilter_demo(cv::Mat &image)
 	imshow("bilateral", dst);
 }
 
-//¶¥Ã±²Ù×÷
+//é¡¶å¸½æ“ä½œ
 
 void tophat_test(void)
 {
@@ -559,21 +559,42 @@ void tophat_test(void)
 	cv::threshold(gray, result, 170, 255, cv::THRESH_BINARY_INV);
 	cv::threshold(gray, result, 0, 255, cv::THRESH_BINARY_INV | cv::THRESH_OTSU);
 
-	//»ñÈ¡×Ô¶¨ÒåºË
-	Mat element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(21, 21)); //µÚÒ»¸ö²ÎÊıMORPH_RECT±íÊ¾¾ØĞÎµÄ¾í»ıºË£¬µ±È»»¹¿ÉÒÔÑ¡ÔñÍÖÔ²ĞÎµÄ¡¢½»²æĞÍµÄ
+	//è·å–è‡ªå®šä¹‰æ ¸
+	Mat element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(21, 21)); //ç¬¬ä¸€ä¸ªå‚æ•°MORPH_RECTè¡¨ç¤ºçŸ©å½¢çš„å·ç§¯æ ¸ï¼Œå½“ç„¶è¿˜å¯ä»¥é€‰æ‹©æ¤­åœ†å½¢çš„ã€äº¤å‰å‹çš„
 
 	cv::Mat erodeImg,dilateImg;
 	cv::erode(gray, erodeImg, element);
-	cv::dilate(erodeImg, dilateImg, element); //Ïàµ±ÓÚÒ»´Î¿ª²Ù×÷
+	cv::dilate(erodeImg, dilateImg, element); //ç›¸å½“äºä¸€æ¬¡å¼€æ“ä½œ
 
 	cv::Mat topHatImg;
 
-	topHatImg = gray - dilateImg;  //Ïàµ±ÓÚÒ»´Î¶¥Ã±²Ù×÷
+	topHatImg = gray - dilateImg;  //ç›¸å½“äºä¸€æ¬¡é¡¶å¸½æ“ä½œ
 
 	return;
 
 }
 
+//æ³Šæ¾èåˆ
+#include <opencv2/photo.hpp>
+void possionMerge(void)
+{
+	Mat src = imread("images/iloveyouticket.jpg");
+	Mat dst = imread("images/wood-texture.jpg");
+
+	// Create an all white mask
+	Mat src_mask = 255 * Mat::ones(src.rows, src.cols, src.depth());
+
+	// The location of the center of the src in the dst
+	Point center(dst.cols / 2, dst.rows / 2);
+
+	// Seamlessly clone src into dst and put the results in output
+	Mat normal_clone;
+	Mat mixed_clone;
+
+
+	seamlessClone(src, dst, src_mask, center, normal_clone, NORMAL_CLONE);
+	seamlessClone(src, dst, src_mask, center, mixed_clone, MIXED_CLONE);
+}
 
 int main(void)
 {
