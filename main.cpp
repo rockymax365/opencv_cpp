@@ -598,7 +598,7 @@ void possionMerge(void)
 
 #include <opencv2/reg/mappergradaffine.hpp> 
 #include <opencv2/reg/mapperpyramid.hpp> 
-//配准并返回与模板对比后的二值图
+//配准并返回与模板对比后的二值图，适合重叠度较高的两张图片配准
 void affineRegCompare1(const cv::Mat& img1_8u, const cv::Mat& img2_8u, std::string curname)
 {
 
