@@ -596,6 +596,48 @@ void possionMerge(void)
 	seamlessClone(src, dst, src_mask, center, mixed_clone, MIXED_CLONE);
 }
 
+#include <opencv2/reg/mappergradaffine.hpp> 
+#include <opencv2/reg/mapperpyramid.hpp> 
+//配准并返回与模板对比后的二值图
+void affineRegCompare1(const cv::Mat& img1_8u, const cv::Mat& img2_8u, std::string curname)
+{
+
+	cv::Mat img1, img2;
+	cv::Mat img1_8u_c1, img2_8u_c1;
+
+
+	//cv::cvtColor(img1_8u, img1_8u_c1, CV_BGR2GRAY);
+	//cv::cvtColor(img2_8u, img2_8u_c1, CV_BGR2GRAY);
+	//img1_8u_c1.convertTo(img1, CV_64FC1);
+	//img2_8u_c1.convertTo(img2, CV_64FC1);
+
+	std::string productID = "1";// m_modelname;    //机种号
+
+	img1_8u.convertTo(img1, CV_64FC1);
+	img2_8u.convertTo(img2, CV_64FC1);
+
+	cv::Mat dest;
+
+	// Register
+	cv::Ptr<cv::reg::MapperGradAffine> mapper = cv::makePtr<cv::reg::MapperGradAffine>();
+	cv::reg::MapperPyramid mappPyr(mapper);
+	cv::Ptr<cv::reg::Map> mapPtr = mappPyr.calculate(img1, img2);
+
+	// Display registration accuracy
+	mapPtr->inverseWarp(img2, dest);				//模板与原图配准
+
+	//dest.convertTo(dest, CV_8UC3);
+	//img1.convertTo(img1, CV_8UC3);
+
+	img1.convertTo(img1, CV_8UC1);
+	dest.convertTo(dest, CV_8UC1);
+
+	cv::imwrite("./template/" + productID + "/template_" + curname + "_temp.bmp", dest);
+
+	return;
+
+}
+
 int main(void)
 {
 	//Mat img = cv::imread("F:/c++/test_opencv/test_opencv/img/ayukawa.jpg"); //IMREAD_GRAYSCALE
